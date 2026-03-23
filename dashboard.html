@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Lumina Health | Medical Command Dashboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;600;700;800&amp;family=Inter:wght@300;400;500;600&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              colors: {
+                "outline": "#73757d",
+                "secondary-container": "#106e00",
+                "on-tertiary-fixed-variant": "#580092",
+                "tertiary-container": "#9d05ff",
+                "primary-dim": "#00d4ec",
+                "primary-fixed": "#00e3fd",
+                "surface-tint": "#81ecff",
+                "tertiary-fixed-dim": "#c787ff",
+                "on-surface": "#ecedf6",
+                "on-surface-variant": "#a9abb3",
+                "surface": "#0b0e14",
+                "error-container": "#9f0519",
+                "tertiary": "#c47fff",
+                "surface-container-lowest": "#000000",
+                "secondary-dim": "#2be800",
+                "tertiary-fixed": "#d199ff",
+                "error-dim": "#d7383b",
+                "inverse-primary": "#006976",
+                "surface-container-highest": "#22262f",
+                "on-secondary-fixed": "#064200",
+                "error": "#ff716c",
+                "outline-variant": "#45484f",
+                "on-primary": "#005762",
+                "surface-variant": "#22262f",
+                "surface-container-high": "#1c2028",
+                "on-primary-fixed-variant": "#005762",
+                "primary-fixed-dim": "#00d4ec",
+                "on-error-container": "#ffa8a3",
+                "on-primary-fixed": "#003840",
+                "on-background": "#ecedf6",
+                "inverse-on-surface": "#52555c",
+                "on-tertiary": "#340059",
+                "secondary": "#2ff801",
+                "background": "#0b0e14",
+                "surface-container": "#161a21",
+                "on-secondary-container": "#e7ffd9",
+                "on-primary-container": "#004d57",
+                "surface-container-low": "#10131a",
+                "secondary-fixed": "#2ff801",
+                "tertiary-dim": "#a533ff",
+                "on-secondary-fixed-variant": "#0d6200",
+                "surface-bright": "#282c36",
+                "secondary-fixed-dim": "#2be800",
+                "on-tertiary-fixed": "#280047",
+                "primary": "#81ecff",
+                "on-tertiary-container": "#ffffff",
+                "on-error": "#490006",
+                "on-secondary": "#0b5800",
+                "surface-dim": "#0b0e14",
+                "primary-container": "#00e3fd",
+                "inverse-surface": "#f9f9ff"
+              },
+              fontFamily: {
+                "headline": ["Manrope"],
+                "body": ["Inter"],
+                "label": ["Inter"]
+              },
+              borderRadius: {"DEFAULT": "0.25rem", "lg": "0.5rem", "xl": "0.75rem", "full": "9999px"},
+            },
+          },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0b0e14;
+            background-image: radial-gradient(rgba(69, 72, 79, 0.15) 1px, transparent 0);
+            background-size: 40px 40px;
+            color: #ecedf6;
+            font-family: 'Inter', sans-serif;
+        }
+        .glass-card {
+            background: rgba(28, 32, 40, 0.65);
+            backdrop-filter: blur(16px);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            border-radius: 1rem;
+        }
+        .neon-glow-primary { box-shadow: 0 0 15px rgba(0, 229, 255, 0.3); }
+        .neon-glow-secondary { box-shadow: 0 0 15px rgba(47, 248, 1, 0.3); }
+        .neon-glow-tertiary { box-shadow: 0 0 15px rgba(196, 127, 255, 0.3); }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+        }
+    </style>
+</head>
+<body class="min-h-screen">
+<!-- SideNavBar (JSON Derived) -->
+<aside class="fixed left-0 top-0 h-full flex flex-col h-screen w-64 border-r border-white/5 bg-[#10131a] z-50">
+<div class="p-6">
+<div class="flex items-center gap-3 mb-10">
+<div class="w-10 h-10 rounded-xl bg-gradient-to-br from-primary to-primary-container flex items-center justify-center neon-glow-primary">
+<span class="material-symbols-outlined text-on-primary">local_hospital</span>
+</div>
+<div>
+<h1 class="text-xl font-bold tracking-tighter text-[#00E5FF] leading-none">Lumina Health</h1>
+<p class="text-[10px] uppercase tracking-[0.2em] text-slate-500 font-bold mt-1">Medical Command</p>
+</div>
+</div>
+<nav class="space-y-1">
+<!-- Dashboard Active -->
+<a class="flex items-center gap-3 px-4 py-3 bg-[#1c2028] text-[#00E5FF] rounded-lg border-l-2 border-[#00E5FF] transition-transform duration-150 active:scale-95" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-bold">Dashboard</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-colors hover:bg-[#1c2028]/50" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-bold">Patients</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-colors hover:bg-[#1c2028]/50" href="#">
+<span class="material-symbols-outlined">calendar_today</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-bold">Appointments</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-colors hover:bg-[#1c2028]/50" href="#">
+<span class="material-symbols-outlined">badge</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-bold">Team</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-colors hover:bg-[#1c2028]/50" href="#">
+<span class="material-symbols-outlined">analytics</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-bold">Reports</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-3 text-slate-400 hover:text-slate-100 transition-colors hover:bg-[#1c2028]/50" href="#">
+<span class="material-symbols-outlined">database</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-bold">Data Sources</span>
+</a>
+</nav>
+</div>
+<div class="mt-auto p-6 space-y-4">
+<button class="w-full py-3 px-4 bg-gradient-to-r from-primary to-primary-container text-on-primary-container font-bold rounded-xl text-sm shadow-lg shadow-primary/20 hover:scale-[1.02] transition-transform">
+                New Patient
+            </button>
+<div class="pt-4 border-t border-white/5 space-y-1">
+<a class="flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-slate-100 transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">settings</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-bold">Settings</span>
+</a>
+<a class="flex items-center gap-3 px-4 py-2 text-slate-400 hover:text-error transition-colors" href="#">
+<span class="material-symbols-outlined text-xl">logout</span>
+<span class="text-[0.6875rem] uppercase tracking-widest font-bold">Logout</span>
+</a>
+</div>
+</div>
+</aside>
+<!-- Main Content Shell -->
+<main class="ml-64 min-h-screen">
+<!-- TopNavBar (JSON Derived) -->
+<header class="flex justify-between items-center w-full px-8 h-16 sticky top-0 bg-[#0b0e14]/80 backdrop-blur-md border-b border-white/5 z-40">
+<div class="flex items-center flex-1 max-w-xl">
+<div class="relative w-full">
+<span class="material-symbols-outlined absolute left-3 top-1/2 -translate-y-1/2 text-slate-500 text-xl">search</span>
+<input class="w-full bg-surface-container-highest/50 border-none rounded-xl py-2 pl-10 pr-4 text-sm text-on-surface focus:ring-1 focus:ring-[#00E5FF]/50 transition-all outline-none placeholder:text-slate-500" placeholder="Search patients, vitals, or records..." type="text"/>
+</div>
+</div>
+<div class="flex items-center gap-6">
+<div class="flex items-center gap-4">
+<button class="relative p-2 text-slate-400 hover:text-white transition-opacity">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-2 right-2 w-2 h-2 bg-error rounded-full border-2 border-background"></span>
+</button>
+<button class="p-2 text-slate-400 hover:text-white transition-opacity">
+<span class="material-symbols-outlined">help</span>
+</button>
+</div>
+<div class="h-8 w-[1px] bg-white/10"></div>
+<div class="flex items-center gap-3 group cursor-pointer">
+<div class="text-right">
+<p class="text-sm font-semibold text-on-surface group-hover:text-primary transition-colors">Dr. Aris</p>
+<p class="text-[10px] text-slate-500 font-bold uppercase tracking-wider">Senior Surgeon</p>
+</div>
+<div class="w-10 h-10 rounded-full border-2 border-primary/20 overflow-hidden">
+<img alt="Dr. Aris Avatar" class="w-full h-full object-cover" data-alt="professional portrait of a middle-aged male doctor with a kind expression, wearing a white coat and stethoscope, studio lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDvvmYEXv5AiRMisy6Tt22rbk7pu27ye6KXgKKrU7nm8CBcgU0i1ykP_q4Ni_Lz8K7iHye__GeE0PnfiJmqrd7rW3j3TlGDRRxtoVDoeqXH_37nmKkh-qLLwZ-BVKeCDhsEEn71peR8rRUEmZU7je-95nG8rE58Dp0mdlSKDCTtVJZfD463B7SUobiq0OEk4G-8yDX8we-L2Ej2UbWArJUyuIIC1avzuzcmwpvbH9-nKVVDBtr3LLr7s6shlFqjkbtnd5Cv-Owo3k5V"/>
+</div>
+</div>
+</div>
+</header>
+<!-- Dashboard Content -->
+<div class="p-10 space-y-10">
+<!-- Page Header -->
+<div class="flex justify-between items-end">
+<div>
+<h2 class="text-3xl font-bold font-headline tracking-tight text-on-surface">Clinical Command Center</h2>
+<p class="text-on-surface-variant mt-2 font-body">Real-time patient flow and facility performance analytics.</p>
+</div>
+<div class="flex gap-3">
+<button class="px-4 py-2 bg-surface-container-high border border-white/5 rounded-lg text-sm font-semibold text-on-surface-variant flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm">calendar_month</span> Last 24 Hours
+                    </button>
+<button class="px-4 py-2 bg-surface-container-high border border-white/5 rounded-lg text-sm font-semibold text-on-surface-variant flex items-center gap-2 hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined text-sm">filter_list</span> Filter
+                    </button>
+</div>
+</div>
+<!-- Metrics Row -->
+<div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+<!-- Total Patients -->
+<div class="glass-card p-6 flex flex-col justify-between h-40 relative overflow-hidden group">
+<div class="flex justify-between items-start">
+<span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Total Patients</span>
+<div class="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center text-primary">
+<span class="material-symbols-outlined text-xl">group</span>
+</div>
+</div>
+<div>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold font-headline">1,248</span>
+<span class="text-secondary text-xs font-bold">+12%</span>
+</div>
+<div class="mt-4 h-1 w-full bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-primary w-3/4 rounded-full neon-glow-primary"></div>
+</div>
+</div>
+<div class="absolute -right-4 -bottom-4 opacity-10 group-hover:opacity-20 transition-opacity">
+<span class="material-symbols-outlined text-8xl">clinical_notes</span>
+</div>
+</div>
+<!-- Appointments Today -->
+<div class="glass-card p-6 flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Appointments Today</span>
+<div class="w-8 h-8 rounded-lg bg-tertiary/10 flex items-center justify-center text-tertiary">
+<span class="material-symbols-outlined text-xl">event</span>
+</div>
+</div>
+<div class="flex items-center gap-4">
+<div class="relative w-16 h-16 flex items-center justify-center">
+<svg class="w-full h-full transform -rotate-90">
+<circle class="text-white/5" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-width="4"></circle>
+<circle class="text-tertiary" cx="32" cy="32" fill="transparent" r="28" stroke="currentColor" stroke-dasharray="176" stroke-dashoffset="44" stroke-width="4"></circle>
+</svg>
+<span class="absolute text-sm font-bold">42</span>
+</div>
+<div>
+<p class="text-xl font-bold font-headline">86%</p>
+<p class="text-[10px] text-slate-500 uppercase font-bold tracking-tight">Capacity Filled</p>
+</div>
+</div>
+</div>
+<!-- Monthly Revenue -->
+<div class="glass-card p-6 flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Monthly Revenue</span>
+<div class="w-8 h-8 rounded-lg bg-secondary/10 flex items-center justify-center text-secondary">
+<span class="material-symbols-outlined text-xl">payments</span>
+</div>
+</div>
+<div>
+<div class="flex items-baseline gap-2">
+<span class="text-3xl font-bold font-headline">$124.5k</span>
+<span class="text-secondary text-xs font-bold">+8%</span>
+</div>
+<div class="mt-4 flex items-end gap-1 h-8">
+<div class="w-full bg-secondary/20 h-4 rounded-t-sm"></div>
+<div class="w-full bg-secondary/40 h-6 rounded-t-sm"></div>
+<div class="w-full bg-secondary/20 h-3 rounded-t-sm"></div>
+<div class="w-full bg-secondary/60 h-8 rounded-t-sm neon-glow-secondary"></div>
+<div class="w-full bg-secondary/40 h-5 rounded-t-sm"></div>
+</div>
+</div>
+</div>
+<!-- Pipeline Coverage -->
+<div class="glass-card p-6 flex flex-col justify-between h-40">
+<div class="flex justify-between items-start">
+<span class="text-[10px] font-bold uppercase tracking-widest text-slate-500">Pipeline Coverage</span>
+<div class="w-8 h-8 rounded-lg bg-[#CCFF00]/10 flex items-center justify-center text-[#CCFF00]">
+<span class="material-symbols-outlined text-xl">monitoring</span>
+</div>
+</div>
+<div>
+<div class="flex justify-between items-end mb-2">
+<span class="text-3xl font-bold font-headline">84%</span>
+<span class="text-[10px] text-slate-500 uppercase font-bold">Optimum</span>
+</div>
+<div class="h-2 w-full bg-white/5 rounded-full overflow-hidden">
+<div class="h-full bg-[#CCFF00] w-[84%] rounded-full shadow-[0_0_10px_rgba(204,255,0,0.5)]"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Main Visualization & Staff Area -->
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+<!-- Patient Flow (Funnel) -->
+<div class="lg:col-span-2 glass-card p-8">
+<div class="flex justify-between items-start mb-10">
+<div>
+<h3 class="text-lg font-bold font-headline">Patient Conversion Flow</h3>
+<p class="text-sm text-slate-500">Inquiry to surgical success metrics</p>
+</div>
+<div class="flex gap-2">
+<div class="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full text-[10px] font-bold uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-primary"></span> Inquiry
+                            </div>
+<div class="flex items-center gap-2 px-3 py-1 bg-white/5 rounded-full text-[10px] font-bold uppercase tracking-wider">
+<span class="w-2 h-2 rounded-full bg-tertiary"></span> Surgery
+                            </div>
+</div>
+</div>
+<div class="relative h-64 flex items-center justify-center">
+<!-- Funnel Visualization Representation -->
+<div class="w-full h-full flex flex-col gap-4">
+<div class="relative h-12 bg-gradient-to-r from-primary/80 to-primary-container/40 rounded-xl flex items-center px-6 group cursor-pointer hover:scale-[1.01] transition-transform">
+<span class="text-sm font-bold z-10">Patient Intake</span>
+<span class="ml-auto text-sm font-bold z-10">1,240 (100%)</span>
+<div class="absolute inset-0 bg-primary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+<div class="relative h-12 bg-gradient-to-r from-primary/60 to-primary-container/30 w-[85%] rounded-xl flex items-center px-6 group cursor-pointer hover:scale-[1.01] transition-transform">
+<span class="text-sm font-bold z-10">Consultation Scheduled</span>
+<span class="ml-auto text-sm font-bold z-10">982 (79%)</span>
+</div>
+<div class="relative h-12 bg-gradient-to-r from-tertiary/60 to-tertiary-container/30 w-[60%] rounded-xl flex items-center px-6 group cursor-pointer hover:scale-[1.01] transition-transform">
+<span class="text-sm font-bold z-10">Diagnosis Confirmed</span>
+<span class="ml-auto text-sm font-bold z-10">421 (34%)</span>
+</div>
+<div class="relative h-12 bg-gradient-to-r from-tertiary/80 to-tertiary-container/60 w-[40%] rounded-xl flex items-center px-6 group cursor-pointer hover:scale-[1.01] transition-transform">
+<span class="text-sm font-bold z-10">Successful Surgery</span>
+<span class="ml-auto text-sm font-bold z-10">298 (24%)</span>
+<div class="absolute inset-0 bg-tertiary/20 blur-xl opacity-0 group-hover:opacity-100 transition-opacity"></div>
+</div>
+</div>
+</div>
+</div>
+<!-- Top Doctors Leaderboard -->
+<div class="glass-card p-8">
+<h3 class="text-lg font-bold font-headline mb-6">Medical Excellence</h3>
+<div class="space-y-6">
+<!-- Doctor 1 -->
+<div class="flex items-center gap-4 group">
+<div class="w-12 h-12 rounded-xl overflow-hidden border border-white/10 group-hover:border-secondary transition-colors">
+<img alt="Dr. Sarah Jenkins" class="w-full h-full object-cover" data-alt="professional medical headshot of a female doctor with blonde hair in a ponytail, wearing blue scrubs, dark background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAxuQndnKzvG-6jKYaZ1avQL8Y5jLubOw_OO2nv6aoUiuJAzKOT3PDlggFkz60CWU72E1T5jlIHaJlKdN-oJWlwiPri7YkIFCkM5AAZAlIIKb4GnDMG3n9bJEDO75blzPJ7-yhBtQTUjwzZDEPh8fwnwkAQeJZskGUSchGyTPbo8tYrmRh0rI5tGVNiX1o7UY1TeHepNkM3L14mQBb6IonSSQjQlFXpDTsNx2ov89p0WWDh0dnuVu1tSg2UkRU9IMme7DGeychqq8tE"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="text-sm font-bold">Dr. Sarah Jenkins</h4>
+<span class="text-xs font-bold text-secondary">9.8</span>
+</div>
+<div class="h-1.5 w-full bg-white/5 rounded-full">
+<div class="h-full bg-secondary w-[98%] rounded-full neon-glow-secondary"></div>
+</div>
+<p class="text-[9px] text-slate-500 uppercase tracking-tighter mt-1 font-bold">Neurosurgeon • 42 Cases</p>
+</div>
+</div>
+<!-- Doctor 2 -->
+<div class="flex items-center gap-4 group">
+<div class="w-12 h-12 rounded-xl overflow-hidden border border-white/10 group-hover:border-primary transition-colors">
+<img alt="Dr. Marcus Thorne" class="w-full h-full object-cover" data-alt="close-up of a smiling male doctor with graying hair, wearing glasses and a lab coat, professional lighting" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDfQB9r7svsrIoX_0wa7LcswblXdW6jUT0tLQ_r7tI_K2ejVn8z37Qv8ENTKvaGsJciyFiZ80aeg0jqpR1i0BxDP6M8ohHY_xBoYwt0ZkcAp3hwIq9lw8808h49DpIui_waNtYWkl5qGCI7Alf_UJVrgOUegOo_vkC7yzS2yiXLeop0tV59xoZPHqU66-Zm2LI4-v-mB0KFeKdFQ8xxFvj4xF7sD4UKGgHBj3_0GSRAH_81RpcqW_Lpo4ZBdNTP0hIxRtcCVIQfw6aa"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="text-sm font-bold">Dr. Marcus Thorne</h4>
+<span class="text-xs font-bold text-primary">9.4</span>
+</div>
+<div class="h-1.5 w-full bg-white/5 rounded-full">
+<div class="h-full bg-primary w-[94%] rounded-full neon-glow-primary"></div>
+</div>
+<p class="text-[9px] text-slate-500 uppercase tracking-tighter mt-1 font-bold">Cardiologist • 38 Cases</p>
+</div>
+</div>
+<!-- Doctor 3 -->
+<div class="flex items-center gap-4 group">
+<div class="w-12 h-12 rounded-xl overflow-hidden border border-white/10 group-hover:border-tertiary transition-colors">
+<img alt="Dr. Elena Rossi" class="w-full h-full object-cover" data-alt="portrait of a confident female physician with dark curly hair, wearing a white medical gown, neutral background" src="https://lh3.googleusercontent.com/aida-public/AB6AXuDMZflwx8ZwKav5Kb6Ajxcn1L8euf-zOQnMDECr5eYgi7X5Weif8MSHs4tK8MEe8Zzj6s8TDmUNjd4RJ1FVJOwOxg1sVyh6hgKIZS-jFUyNkRmnFQYUrfJBVGV3iwvocYqdlLd6dktnhjo0kfsHcAULuZ-7PwrGqL90FqSekNyxEcKdfaF-qQxlozjJMq29mFXX6pI0AbKUqJ9i6H2yMEbKIXuVQvwHUUbHylh50kxsgILnE6W_pOXphQGpfBD4aYzEOYfnxJ7iBW86"/>
+</div>
+<div class="flex-1">
+<div class="flex justify-between items-start mb-1">
+<h4 class="text-sm font-bold">Dr. Elena Rossi</h4>
+<span class="text-xs font-bold text-tertiary">9.2</span>
+</div>
+<div class="h-1.5 w-full bg-white/5 rounded-full">
+<div class="h-full bg-tertiary w-[92%] rounded-full neon-glow-tertiary"></div>
+</div>
+<p class="text-[9px] text-slate-500 uppercase tracking-tighter mt-1 font-bold">Oncologist • 56 Cases</p>
+</div>
+</div>
+</div>
+<button class="w-full mt-8 py-3 border border-white/5 rounded-xl text-xs font-bold uppercase tracking-widest text-on-surface-variant hover:bg-white/5 transition-colors">
+                        View Full Roster
+                    </button>
+</div>
+</div>
+<!-- Appointment Status Matrix -->
+<div class="glass-card p-8">
+<div class="flex justify-between items-center mb-8">
+<div>
+<h3 class="text-lg font-bold font-headline">Appointment Status Matrix</h3>
+<p class="text-sm text-slate-500">Correlation between patient urgency and scheduled status</p>
+</div>
+<div class="flex gap-6">
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-secondary shadow-[0_0_8px_#2ff801]"></span>
+<span class="text-xs font-bold text-slate-400">Active</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-primary shadow-[0_0_8px_#81ecff]"></span>
+<span class="text-xs font-bold text-slate-400">Pending</span>
+</div>
+<div class="flex items-center gap-2">
+<span class="w-3 h-3 rounded-full bg-error shadow-[0_0_8px_#ff716c]"></span>
+<span class="text-xs font-bold text-slate-400">Canceled</span>
+</div>
+</div>
+</div>
+<div class="h-[400px] w-full relative border-l border-b border-white/10 flex">
+<!-- Grid Background -->
+<div class="absolute inset-0 grid grid-cols-10 grid-rows-10">
+<div class="col-span-10 row-span-10 border-t border-r border-white/5 border-dashed"></div>
+</div>
+<!-- Axis Labels -->
+<div class="absolute -left-12 top-1/2 -translate-y-1/2 -rotate-90 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                        Patient Urgency Score
+                    </div>
+<div class="absolute -bottom-8 left-1/2 -translate-x-1/2 text-[10px] font-bold uppercase tracking-widest text-slate-500">
+                        Scheduled Complexity Index
+                    </div>
+<!-- Scatter Points (Simulated) -->
+<!-- High Urgency / High Complexity -->
+<div class="absolute bottom-[80%] left-[85%] w-4 h-4 rounded-full bg-secondary shadow-[0_0_12px_#2ff801] animate-pulse"></div>
+<div class="absolute bottom-[75%] left-[82%] w-3 h-3 rounded-full bg-secondary/80"></div>
+<div class="absolute bottom-[85%] left-[78%] w-3 h-3 rounded-full bg-secondary/80"></div>
+<!-- Medium Urgency / Medium Complexity -->
+<div class="absolute bottom-[50%] left-[45%] w-4 h-4 rounded-full bg-primary shadow-[0_0_12px_#81ecff]"></div>
+<div class="absolute bottom-[48%] left-[48%] w-3 h-3 rounded-full bg-primary/80"></div>
+<div class="absolute bottom-[55%] left-[42%] w-3 h-3 rounded-full bg-primary/80"></div>
+<div class="absolute bottom-[42%] left-[52%] w-3 h-3 rounded-full bg-primary/80"></div>
+<!-- Low Urgency / High Complexity (At Risk) -->
+<div class="absolute bottom-[20%] left-[90%] w-4 h-4 rounded-full bg-error shadow-[0_0_12px_#ff716c]"></div>
+<div class="absolute bottom-[15%] left-[88%] w-3 h-3 rounded-full bg-error/80"></div>
+<div class="absolute bottom-[25%] left-[92%] w-3 h-3 rounded-full bg-error/80"></div>
+<!-- Random Distribution -->
+<div class="absolute bottom-[30%] left-[20%] w-2 h-2 rounded-full bg-primary/40"></div>
+<div class="absolute bottom-[60%] left-[10%] w-2 h-2 rounded-full bg-secondary/40"></div>
+<div class="absolute bottom-[10%] left-[60%] w-2 h-2 rounded-full bg-error/40"></div>
+<div class="absolute bottom-[70%] left-[30%] w-3 h-3 rounded-full bg-primary/60"></div>
+</div>
+</div>
+</div>
+</main>
+</body></html>
