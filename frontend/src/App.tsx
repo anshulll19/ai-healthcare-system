@@ -3,11 +3,12 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import Layout from './Layout';
 import Dashboard from './Dashboard';
 import Auth from './Auth';
-import Patients from './Patients';
-import Reports from './Reports';
-import Logs from './Logs';
-import LogHealth from './LogHealth';
 import AdminDashboard from './AdminDashboard';
+import Logs from './Logs';
+import ALSCommunicationPage from './pages/ALSCommunicationPage';
+import ALSSymptomTrackerPage from './pages/ALSSymptomTrackerPage';
+import CaregiverDashboard from './pages/CaregiverDashboard';
+import HealthEducation from './pages/HealthEducation';
 
 function App() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
@@ -21,24 +22,43 @@ function App() {
     }
   }, []);
 
-  return isAuthenticated ? (
+  const handleLogin = (r: string) => {
+    setIsAuthenticated(true);
+    setRole(r);
+  };
+
+  if (!isAuthenticated) {
+    return <Auth onLogin={handleLogin} />;
+  }
+
+  const isCaregiver = role === 'admin' || role === 'caregiver';
+
+  return (
     <Routes>
       <Route path="/" element={<Layout role={role} />}>
-        <Route index element={role === 'admin' ? <AdminDashboard /> : <Dashboard />} />
-        {role === 'patient' && (
+        {/* Patient routes */}
+        {!isCaregiver && (
           <>
-            <Route path="patients" element={<Patients />} />
-            <Route path="reports" element={<Reports />} />
-            <Route path="log-health" element={<LogHealth />} />
+            <Route index element={<Dashboard />} />
+            <Route path="communicate" element={<ALSCommunicationPage />} />
+            <Route path="symptoms" element={<ALSSymptomTrackerPage />} />
+            <Route path="education" element={<HealthEducation />} />
           </>
         )}
-        {role === 'admin' && (
-          <Route path="logs" element={<Logs />} />
+
+        {/* Caregiver / Admin routes */}
+        {isCaregiver && (
+          <>
+            <Route index element={<CaregiverDashboard />} />
+            <Route path="admin" element={<AdminDashboard />} />
+            <Route path="logs" element={<Logs />} />
+          </>
         )}
+
+        {/* Catch-all redirect */}
+        <Route path="*" element={<Navigate to="/" replace />} />
       </Route>
     </Routes>
-  ) : (
-    <Auth onLogin={(r: string) => { setIsAuthenticated(true); setRole(r); }} />
   );
 }
 

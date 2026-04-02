@@ -1,135 +1,170 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
 import { Outlet, NavLink, useNavigate, Link } from 'react-router-dom';
-import { 
-  LayoutDashboard, 
-  Users, 
-  FileText,
-  Activity, 
-  Search,
-  Bell,
-  HelpCircle,
-  LogOut,
-  Clock
+import {
+  MessageSquare, Activity, BookOpen, Shield, Search,
+  Bell, LogOut, AlertTriangle, Brain, LayoutDashboard, Users, Clock
 } from 'lucide-react';
 
 export default function Layout({ role }: { role: string | null }) {
   const navigate = useNavigate();
+  const [alertCount, setAlertCount] = useState(0);
+
+  useEffect(() => {
+    const checkAlerts = async () => {
+      try {
+        const res = await fetch('http://localhost:8000/api/als/emergency/alerts', { credentials: 'include' });
+        if (res.ok) {
+          const data = await res.json();
+          setAlertCount((data.alerts || []).filter((a: any) => !a.resolved).length);
+        }
+      } catch (e) {}
+    };
+    checkAlerts();
+    const interval = setInterval(checkAlerts, 10000);
+    return () => clearInterval(interval);
+  }, []);
 
   const handleLogout = async () => {
     try {
-      await fetch('http://localhost:8000/api/auth/logout', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json'
-        },
-        credentials: 'include'
-      });
-    } catch (err) {
-      console.error('Logout error:', err);
-    } finally {
-      // Clear all frontend storage
-      localStorage.clear();
-      sessionStorage.clear();
-      
-      // Redirecting via window.location strongly clears state-held values in App.tsx
-      navigate('/login');
-    }
+      await fetch('http://localhost:8000/api/auth/logout', { method: 'POST', credentials: 'include' });
+    } catch (e) {}
+    localStorage.clear();
+    sessionStorage.clear();
+    window.location.href = '/';
   };
 
+  const isCaregiver = role === 'admin' || role === 'caregiver';
+
+  const patientNav = [
+    { name: 'Home', icon: LayoutDashboard, path: '/' },
+    { name: 'Communicate', icon: MessageSquare, path: '/communicate' },
+    { name: 'Symptoms', icon: Activity, path: '/symptoms' },
+    { name: 'Education', icon: BookOpen, path: '/education' },
+  ];
+
+  const caregiverNav = [
+    { name: 'Dashboard', icon: Shield, path: '/' },
+    { name: 'Patients', icon: Users, path: '/admin' },
+    { name: 'Logs', icon: Clock, path: '/logs' },
+  ];
+
+  const navItems = isCaregiver ? caregiverNav : patientNav;
+
   return (
-    <div className="min-h-screen bg-[#0b0e14] text-[#ecedf6] flex font-sans">
-      
+    <div className="min-h-screen bg-[#060910] text-[#ecedf6] flex font-sans">
+
       {/* Sidebar */}
-      <aside className="w-64 border-r border-white/5 bg-[#10131a] hidden md:flex flex-col">
+      <aside className="w-72 border-r border-white/5 bg-[#0a0d14] hidden md:flex flex-col">
+        {/* Brand */}
         <div className="p-6 flex items-center gap-3 border-b border-white/5">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-tr from-[#00E5FF] to-[#9D00FF] flex items-center justify-center shadow-[0_0_12px_rgba(0,229,255,0.4)]">
-            <Activity className="w-5 h-5 text-white" />
+          <div className="w-10 h-10 rounded-xl bg-gradient-to-tr from-[#00E5FF] to-[#9D00FF] flex items-center justify-center shadow-[0_0_15px_rgba(0,229,255,0.4)]">
+            <Brain className="w-6 h-6 text-white" />
           </div>
-          <span className="font-bold text-xl tracking-tight">Lumina Health</span>
+          <div>
+            <span className="font-black text-xl tracking-tight bg-gradient-to-r from-[#00E5FF] to-[#9D00FF] bg-clip-text text-transparent">
+              NeuroVoice
+            </span>
+            <p className="text-[10px] text-gray-500 -mt-0.5">ALS AI Assistant</p>
+          </div>
         </div>
-        
-        <nav className="flex-1 space-y-2 mt-8">
-          {(role === 'admin' ? [
-            { name: 'Admin Hub', icon: LayoutDashboard, path: '/' },
-            { name: 'System Logs', icon: Clock, path: '/logs' },
-          ] : [
-            { name: 'Patient Hub', icon: LayoutDashboard, path: '/' },
-            { name: 'My Records', icon: Users, path: '/patients' },
-            { name: 'Reports', icon: FileText, path: '/reports' },
-          ]).map((item) => (
-            <NavLink 
-              key={item.name}
-              to={item.path}
+
+        {/* Navigation */}
+        <nav className="flex-1 pt-6 px-3 space-y-1">
+          <p className="px-3 text-[10px] uppercase tracking-widest text-gray-500 mb-3">
+            {isCaregiver ? 'Caregiver' : 'Patient'} Menu
+          </p>
+          {navItems.map((item) => (
+            <NavLink key={item.name} to={item.path} end={item.path === '/'}
               className={({ isActive }) => `w-full flex items-center gap-3 px-4 py-3 rounded-xl transition-all ${
-                isActive 
-                  ? 'bg-white/10 text-white shadow-[0_0_15px_rgba(255,255,255,0.05)]' 
-                  : 'text-gray-400 hover:text-white hover:bg-white/5'
-              }`}
-            >
+                isActive
+                  ? 'bg-white/8 text-white shadow-[0_0_20px_rgba(0,229,255,0.05)]'
+                  : 'text-gray-400 hover:text-white hover:bg-white/4'
+              }`}>
               {({ isActive }) => (
                 <>
                   <item.icon className={`w-5 h-5 ${isActive ? 'text-[#00E5FF]' : ''}`} />
-                  <span className="font-medium">{item.name}</span>
+                  <span className="font-medium text-sm">{item.name}</span>
                 </>
               )}
             </NavLink>
           ))}
         </nav>
-        
-        {/* Log New Vitals Button */}
-        <div className="p-4 mb-4">
-          <Link to="/log-health" className="w-full py-3 rounded-xl bg-gradient-to-r from-[#00E5FF] to-[#39FF14] text-[#0b0e14] font-bold shadow-[0_0_20px_rgba(0,229,255,0.5)] hover:shadow-[0_0_25px_rgba(0,229,255,0.8)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2">
-            <Activity className="w-5 h-5" />
-            Log New Vitals
-          </Link>
-        </div>
-      </aside>
 
-      {/* Main Content */}
-      <main className="flex-1 flex flex-col relative overflow-hidden">
-        {/* Subtle Background Grid Element */}
-        <div className="absolute inset-0 pointer-events-none" 
-             style={{ 
-               backgroundImage: 'linear-gradient(rgba(255, 255, 255, 0.03) 1px, transparent 1px), linear-gradient(90deg, rgba(255, 255, 255, 0.03) 1px, transparent 1px)',
-               backgroundSize: '40px 40px' 
-             }} 
-        />
-
-        {/* Top Header */}
-        <header className="h-20 border-b border-white/5 bg-[#0b0e14]/80 backdrop-blur-md flex items-center justify-between px-8 relative z-10">
-          <div className="relative w-96">
-            <Search className="absolute left-3 top-1/2 -translate-y-1/2 w-5 h-5 text-gray-400" />
-            <input 
-              type="text" 
-              placeholder="Search patients, doctors, or reports..." 
-              className="w-full bg-white/5 border border-white/10 rounded-full py-2 pl-10 pr-4 text-sm text-white focus:outline-none focus:border-[#00E5FF]/50 focus:shadow-[0_0_10px_rgba(0,229,255,0.2)] transition-all"
-            />
+        {/* Emergency SOS Button (Patient only) */}
+        {!isCaregiver && (
+          <div className="p-4 mx-3 mb-2">
+            <Link to="/communicate"
+              className="w-full py-4 rounded-2xl bg-gradient-to-r from-[#FF0040] to-[#FF4444] text-white font-black text-lg shadow-[0_0_25px_rgba(255,0,64,0.4)] hover:shadow-[0_0_35px_rgba(255,0,64,0.6)] hover:scale-[1.02] transition-all flex items-center justify-center gap-2 animate-pulse-emergency">
+              <AlertTriangle className="w-6 h-6" />
+              SOS
+            </Link>
           </div>
-          <div className="flex items-center gap-5">
-            <button className="text-gray-400 hover:text-white transition-colors relative">
-              <Bell className="w-5 h-5" />
-              <span className="absolute -top-1 -right-1 w-2.5 h-2.5 bg-[#FF007F] rounded-full shadow-[0_0_8px_rgba(255,0,127,0.6)]"></span>
-            </button>
-            <button className="text-gray-400 hover:text-white transition-colors">
-              <HelpCircle className="w-5 h-5" />
-            </button>
-            <div className="h-8 w-8 rounded-full bg-gradient-to-r from-purple-500 to-[#FF007F] flex items-center justify-center text-sm font-bold shadow-[0_0_10px_rgba(255,0,127,0.3)] cursor-pointer">
-              DA
+        )}
+
+        {/* User & Logout */}
+        <div className="p-4 border-t border-white/5">
+          <div className="flex items-center gap-3">
+            <div className="w-9 h-9 rounded-full bg-gradient-to-r from-[#00E5FF] to-[#9D00FF] flex items-center justify-center text-sm font-bold shadow-lg">
+              {(localStorage.getItem('user_name') || 'U')[0].toUpperCase()}
             </div>
-            
-            {/* Logout Button */}
-            <button 
-              onClick={handleLogout} 
-              className="flex items-center justify-center w-8 h-8 rounded-full bg-white/5 hover:bg-white/10 border border-white/10 text-gray-400 hover:text-[#FF007F] transition-all shadow-sm ml-2"
-              title="Logout"
-            >
+            <div className="flex-1 min-w-0">
+              <p className="text-sm font-medium text-white truncate">{localStorage.getItem('user_name') || 'User'}</p>
+              <p className="text-[10px] text-gray-500 capitalize">{role}</p>
+            </div>
+            <button onClick={handleLogout}
+              className="p-2 rounded-lg bg-white/5 hover:bg-red-500/10 text-gray-400 hover:text-red-400 transition-all"
+              title="Logout" aria-label="Logout">
               <LogOut className="w-4 h-4" />
             </button>
           </div>
+        </div>
+      </aside>
+
+      {/* Main Content Area */}
+      <main className="flex-1 flex flex-col relative overflow-hidden">
+        {/* Subtle Grid Background */}
+        <div className="absolute inset-0 pointer-events-none"
+          style={{
+            backgroundImage: 'radial-gradient(rgba(0, 229, 255, 0.03) 1px, transparent 1px)',
+            backgroundSize: '32px 32px'
+          }} />
+
+        {/* Top Header */}
+        <header className="h-16 border-b border-white/5 bg-[#060910]/80 backdrop-blur-xl flex items-center justify-between px-6 relative z-10">
+          {/* Mobile Brand */}
+          <div className="flex items-center gap-2 md:hidden">
+            <Brain className="w-6 h-6 text-[#00E5FF]" />
+            <span className="font-black text-lg bg-gradient-to-r from-[#00E5FF] to-[#9D00FF] bg-clip-text text-transparent">NeuroVoice</span>
+          </div>
+
+          <div className="hidden md:block" />
+
+          <div className="flex items-center gap-4">
+            {/* Alert Badge */}
+            <button className="relative text-gray-400 hover:text-white transition-colors p-2" aria-label="Notifications">
+              <Bell className="w-5 h-5" />
+              {alertCount > 0 && (
+                <span className="absolute -top-0.5 -right-0.5 w-5 h-5 bg-red-500 rounded-full flex items-center justify-center text-[10px] font-bold text-white shadow-[0_0_10px_rgba(255,0,64,0.6)] animate-pulse">
+                  {alertCount}
+                </span>
+              )}
+            </button>
+
+            {/* Mobile Nav */}
+            <div className="flex md:hidden gap-2">
+              {navItems.map(item => (
+                <NavLink key={item.name} to={item.path} end={item.path === '/'}
+                  className={({ isActive }) => `p-2 rounded-lg transition-all ${isActive ? 'text-[#00E5FF] bg-white/5' : 'text-gray-500'}`}
+                  aria-label={item.name}>
+                  <item.icon className="w-5 h-5" />
+                </NavLink>
+              ))}
+            </div>
+          </div>
         </header>
 
-        {/* Outlet for nested routes */}
-        <div className="p-8 relative z-10 flex-1 overflow-y-auto w-full">
+        {/* Page Content */}
+        <div className="p-6 md:p-8 relative z-10 flex-1 overflow-y-auto w-full">
           <Outlet />
         </div>
       </main>

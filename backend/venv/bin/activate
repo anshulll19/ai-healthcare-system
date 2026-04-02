@@ -35,7 +35,7 @@ deactivate () {
 # unset irrelevant variables
 deactivate nondestructive
 
-VIRTUAL_ENV="/Users/nishoosingh/Downloads/AyushCare-AI-Smart-Healthcare-Assistance-for-Bharat/backend/venv"
+VIRTUAL_ENV="/Users/nishoosingh/Downloads/hackathon-healthcare-ai/backend/venv"
 export VIRTUAL_ENV
 
 _OLD_VIRTUAL_PATH="$PATH"
