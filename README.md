@@ -159,7 +159,7 @@ hackathon-healthcare-ai/
 
 | Member |
 |--------|
-| Nishoo Singh |
+| Anshul Singh |
 | Amartya Tats Pandey |
 | Gagan |
 
