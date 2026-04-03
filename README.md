@@ -157,13 +157,11 @@ hackathon-healthcare-ai/
 
 ## 👥 Team
 
-| Member | Contribution |
-|--------|-------------|
-| Anshul Singh | DB schema, AI engine, ALS routes |
-| Manasi Sharma | Auth, communication assistant |
-| Aaniya | Symptom tracker, education module |
-| Gagan | Caregiver dashboard, alerting |
-| Shakti Singh | Frontend design, accessibility |
+| Member |
+|--------|
+| Nishoo Singh |
+| Amartya Tats Pandey |
+| Gagan |
 
 ---
 

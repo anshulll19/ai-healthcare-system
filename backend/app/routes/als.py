@@ -421,7 +421,7 @@ def caregiver_dashboard():
     # Overall stats
     total_patients = len(patients)
     total_active_alerts = EmergencyAlert.query.filter_by(resolved=False).count()
-    critical_patients = sum(1 for p in patient_data if p.get("risk_analysis", {}).get("risk_level") in ("High", "Critical"))
+    critical_patients = sum(1 for p in patient_data if (p.get("risk_analysis") or {}).get("risk_level") in ("High", "Critical"))
 
     return jsonify({
         "success": True,
